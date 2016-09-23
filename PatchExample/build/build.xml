@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="AntDemo"
+    default="release" >
+    <!-- tools dir -->
+    <property
+        name="sdk-folder"
+        value="D:\Android_tools\AndroidSdk" />
+    <property
+        name="platform-folder"
+        value="${sdk-folder}\platforms\android-22" />
+    <property
+        name="platform-tools-folder"
+        value="${sdk-folder}\build-tools\22.0.1" />
+    <property
+        name="jdk-folder"
+        value="C:\Program Files\Java\jdk1.8.0_91" />
+    <property
+        name="android-jar"
+        value="${platform-folder}\android.jar" />
+    <property
+        name="tools.aapt"
+        value="${platform-tools-folder}\aapt.exe" />
+    <property
+        name="tools.javac"
+        value="${jdk-folder}\bin\javac.exe" />
+    <property
+        name="tools.dx"
+        value="${platform-tools-folder}\dx.bat" />
+    <property
+        name="tools.apkbuilder"
+        value="${sdk-folder}\tools\apkbuilder.bat" />
+    <property
+        name="tools.jarsigner"
+        value="${jdk-folder}\bin\jarsigner.exe" />
+
+    <!-- project dir -->
+    <property
+        name="project-dir"
+        value="C:\Users\jiangwei1-g\Desktop\dexpose\PatchExample" />
+    <property
+        name="res"
+        value="${project-dir}\res" />
+    <property
+        name="gen"
+        value="${project-dir}\gen" />
+    <property
+        name="src"
+        value="${project-dir}\src" />
+    <property
+        name="bin"
+        value="${project-dir}\bin" />
+    <property
+        name="assets"
+        value="${project-dir}\assets" />
+    <property
+        name="libs"
+        value="${project-dir}\libs" />
+
+	<!-- file lists -->
+    <property
+        name="manifest"
+        value="${project-dir}\AndroidManifest.xml" />
+    <property
+        name="java-file-gen"
+        value="${gen}\com\example\antdemo\*.java" />
+    <property
+        name="java-file-src"
+        value="${src}\com\example\antdemo\*.java" />
+    <property
+        name="dex-name"
+        value="${bin}\classes.dex" />
+    <property
+        name="pakcage-temp-name"
+        value="${bin}\${ant.project.name}" />
+    <property
+        name="unsigned-apk-name"
+        value="${ant.project.name}_unsigned.apk" />
+    <property
+        name="unsigned-apk-path"
+        value="${bin}\${unsigned-apk-name}" />
+    <property
+        name="signed-apk-name"
+        value="PatchDemo.apk" />
+    <property
+        name="signed-apk-path"
+        value="${bin}\${signed-apk-name}" />
+    <property
+        name="keystore-name"
+        value="${project-dir}\my.keystore" />
+    <property
+        name="keystore-alias"
+        value="ant_test" />
+
+    <!-- task -->
+    <target name="init" >
+        <echo>
+			Initialize...        </echo>
+        <delete dir="${bin}" />
+        <mkdir dir="${bin}" />
+    </target>
+
+    <target
+        name="gen-R"
+        depends="init" >
+        <echo>
+			Generating R.java from the resources... 
+			${project-dir}
+			${res}
+        </echo>
+        <exec
+            executable="${tools.aapt}"
+            failonerror="true" >
+            <arg value="package" />
+            <arg value="-f" />
+            <arg value="-m" />
+            <arg value="-J" />
+            <arg value="${gen}" />
+            <arg value="-S" />
+            <arg value="${res}" />
+            <arg value="-M" />
+            <arg value="${manifest}" />
+            <arg value="-I" />
+            <arg value="${android-jar}" />
+        </exec>
+    </target>
+
+    <target
+        name="compile"
+        depends="gen-R" >
+        <echo>
+			Compile...        </echo>
+        <javac
+            bootclasspath="${android-jar}"
+            compiler="javac1.7"
+            target="1.7"
+            destdir="${bin}"
+            encoding="utf-8"
+            includeAntRuntime="true"
+            listfiles="true">
+            <src path="${project-dir}"/> 
+            <classpath>
+                 <!-- 引用第三方jar包需要引用，用于辅助编译，并没有将jar打包进去。jar的打包在dex命令中。-->
+                 <fileset dir="${libs}" includes="*.jar" />
+            </classpath>
+        </javac>
+    </target>
+
+    <target
+        name="dex"
+        depends="compile" >
+        <echo>
+			Generate dex...        </echo>
+        <exec
+            executable="${tools.dx}"
+            failonerror="true" >
+            <arg value="--dex" />
+            <arg value="--output=${dex-name}" />
+            <arg value="${bin}" /><!-- classes文件位置 -->
+            <!-- 把libs下所有jar打包 -->
+            <!--  
+            <arg value="${libs}"/>
+            -->
+        </exec>
+    </target>
+
+    <target
+        name="package"
+        depends="dex" >
+        <echo>
+   			Package resource and assets...        </echo>
+        <exec
+            executable="${tools.aapt}"
+            failonerror="true" >
+            <arg value="package" />
+            <arg value="-f" />
+            <arg value="-A" />
+            <arg value="${assets}" />
+            <arg value="-S" />
+            <arg value="${res}" />
+            <arg value="-I" />
+            <arg value="${android-jar}" />
+            <arg value="-M" />
+            <arg value="${manifest}" />
+            <arg value="-F" />
+            <arg value="${pakcage-temp-name}" />
+        </exec>
+    </target>
+
+    <target
+        name="build-unsigned-apk"
+        depends="package" >
+        <echo>
+  			Build unsigned apk        </echo>
+        <java classpath="${sdk-folder}/tools/lib/sdklib.jar" classname="com.android.sdklib.build.ApkBuilderMain">  
+            <arg value="${unsigned-apk-path}" />  
+            <arg value="-u" />  
+            <arg value="-z" />  
+            <arg value="${pakcage-temp-name}" />  
+            <arg value="-f" />  
+            <arg value="${dex-name}" />  
+            <arg value="-rf" />    
+            <arg value="${src}" />   
+            <arg value="-rj"/>  
+            <arg value="${libs}"/>   
+        </java> 
+        
+    </target>
+    
+    <target
+        name="sign-apk"
+        depends="build-unsigned-apk" >
+        <echo>
+  			Sign apk
+        </echo>
+        <exec
+            executable="${tools.jarsigner}"
+            failonerror="true" >
+            <arg value="-keystore" />
+            <arg value="${keystore-name}" />
+            <arg value="-storepass" />
+            <arg value="123456" />
+            <arg value="-keypass" />
+            <arg value="123456" />
+            <arg value="-signedjar" />
+            <arg value="${signed-apk-path}" />
+            <arg value="${unsigned-apk-path}" />
+            <arg value="${keystore-alias}" />
+        </exec>
+    </target>
+
+    <target
+        name="release"
+        depends="sign-apk" >
+        <delete file="${pakcage-temp-name}" />
+        <delete file="${unsigned-apk-path}" />
+        <echo>
+			APK is released. path:${signed-apk-path}        </echo>
+    </target>
+
+</project>

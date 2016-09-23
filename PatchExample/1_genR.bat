@@ -1,0 +1,1 @@
+aapt package -f -m -J gen -S res -I D:/android-sdk-windows/platforms/android-16/android.jar -M AndroidManifest.xml 

@@ -1,0 +1,1 @@
+apkbuilder G:\Code\Android\Workspace\AntDemo\bin\AntDemo_unsigned.apk -v -u -z G:\Code\Android\Workspace\AntDemo\bin\AntDemo -f G:\Code\Android\Workspace\AntDemo\bin\classes.dex -rf G:\Code\Android\Workspace\AntDemo\src 

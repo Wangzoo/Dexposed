@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\hasee\Desktop\DexposedDetails\PatchExample\app\libs\patchloader.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="711146b4e0053d7575bb73d50dbd8c87e2104ba7">
+        <dex dex="C:\Users\hasee\Desktop\DexposedDetails\PatchExample\app\build\intermediates\pre-dexed\debug\patchloader_4f0de063a37c6306808b903370bba508d6843987.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\hasee\Desktop\DexposedDetails\PatchExample\app\libs\dexposedbridge.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="828021ed80a96f0457bc34d7a4297de4145d97f8">
+        <dex dex="C:\Users\hasee\Desktop\DexposedDetails\PatchExample\app\build\intermediates\pre-dexed\debug\dexposedbridge_3f9d8e75159060e3d188a8ff8c87660602e9ceb3.jar" />
+    </item>
+
+</items>

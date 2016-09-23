@@ -1,0 +1,1 @@
+aapt package -f -A assets -S res -I D:/android-sdk-windows/platforms/android-17/android.jar -M AndroidManifest.xml -F bin/AntDemo

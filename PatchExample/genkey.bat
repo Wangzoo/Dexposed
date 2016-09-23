@@ -1,0 +1,1 @@
+keytool -genkey -alias ant_test1 -keyalg RSA -validity 20000 -keystore my.keystore

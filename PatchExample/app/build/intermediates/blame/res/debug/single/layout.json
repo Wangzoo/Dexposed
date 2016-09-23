@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\hasee\\Desktop\\Dexposed\\PatchExample\\app\\build\\intermediates\\res\\merged\\debug\\layout\\main_activity.xml",
+        "source": "C:\\Users\\hasee\\Desktop\\Dexposed\\PatchExample\\app\\src\\main\\res\\layout\\main_activity.xml"
+    },
+    {
+        "merged": "C:\\Users\\hasee\\Desktop\\DexposedDetails\\PatchExample\\app\\build\\intermediates\\res\\merged\\debug\\layout\\main_activity.xml",
+        "source": "C:\\Users\\hasee\\Desktop\\DexposedDetails\\PatchExample\\app\\src\\main\\res\\layout\\main_activity.xml"
+    }
+]

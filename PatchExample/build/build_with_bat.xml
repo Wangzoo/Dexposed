@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="AntDemo"
+    default="release" >
+
+    <!--
+	1.aapt package -f -m -J gen -S res -I D:/android-sdk-windows/platforms/android-16/android.jar -M AndroidManifest.xml
+  	   
+	2.mkdir bin
+	  javac -target 1.6 -bootclasspath D:/android-sdk-windows/platforms/android-16/android.jar -d bin gen\com\example\antdemo\*.java src\com\example\antdemo\*.java
+	  
+	3.dx 两个短横dex 两个短横output=G:\Code\Android\Workspace\AntDemo\bin\classes.dex G:\Code\Android\Workspace\AntDemo\bin
+	
+	4.aapt package -f -A assets -S res -I D:/android-sdk-windows/platforms/android-16/android.jar -M AndroidManifest.xml -F bin/AntDemo
+	
+	5.apkbuilder G:\Code\Android\Workspace\AntDemo\bin\AntDemo_unsigned.apk -v -u -z G:\Code\Android\Workspace\AntDemo\bin\AntDemo -f G:\Code\Android\Workspace\AntDemo\bin\classes.dex -rf G:\Code\Android\Workspace\AntDemo\src 
+	
+	6.jarsigner -keystore G:\Code\Android\Workspace\AntDemo\build\my.keystore -storepass 123456 -keypass 123456 -signedjar G:\Code\Android\Workspace\AntDemo\bin\AntDemo_signed.apk G:\Code\Android\Workspace\AntDemo\bin\AntDemo_unsigned.apk ant_test
+    -->
+
+    <property
+        name="sdk-folder"
+        value="D:\android-sdk-windows" />
+
+    <property
+        name="platform-folder"
+        value="${sdk-folder}\platforms\android-17" />
+
+    <property
+        name="platform-tools-folder"
+        value="${sdk-folder}\platform-tools" />
+
+    <property
+        name="jdk-folder"
+        value="D:\Program Files (x86)\Java\jdk1.6.0_45" />
+
+    <!-- tools -->
+
+    <property
+        name="android-jar"
+        value="${platform-folder}\android.jar" />
+
+    <property
+        name="tools.aapt"
+        value="${platform-tools-folder}\aapt.exe" />
+
+    <property
+        name="tools.javac"
+        value="${jdk-folder}\bin\javac.exe" />
+
+    <property
+        name="tools.dx"
+        value="${platform-tools-folder}\dx.bat" />
+
+    <property
+        name="tools.apkbuilder"
+        value="${sdk-folder}\tools\apkbuilder.bat" />
+
+    <property
+        name="tools.jarsigner"
+        value="${jdk-folder}\bin\jarsigner.exe" />
+
+    <!-- dir -->
+
+    <property
+        name="project-dir"
+        value="G:\Code\Android\Workspace\AntDemo" />
+
+    <property
+        name="res"
+        value="${project-dir}\res" />
+
+    <property
+        name="gen"
+        value="${project-dir}\gen" />
+
+    <property
+        name="src"
+        value="${project-dir}\src" />
+
+    <property
+        name="bin"
+        value="${project-dir}\bin" />
+
+    <property
+        name="assets"
+        value="${project-dir}\assets" />
+
+    <!-- files -->
+
+    <property
+        name="manifest"
+        value="${project-dir}\AndroidManifest.xml" />
+
+    <property
+        name="java-file-gen"
+        value="${gen}\com\example\antdemo\*.java" />
+
+    <property
+        name="java-file-src"
+        value="${src}\com\example\antdemo\*.java" />
+
+    <property
+        name="dex-name"
+        value="${bin}\classes.dex" />
+
+    <property
+        name="pakcage-temp-name"
+        value="${bin}\${ant.project.name}" />
+
+    <property
+        name="unsigned-apk-name"
+        value="${ant.project.name}_unsigned.apk" />
+
+    <property
+        name="unsigned-apk-path"
+        value="${bin}\${unsigned-apk-name}" />
+
+    <property
+        name="signed-apk-name"
+        value="${ant.project.name}.apk" />
+
+    <property
+        name="signed-apk-path"
+        value="${bin}\${signed-apk-name}" />
+
+    <property
+        name="keystore-name"
+        value="${project-dir}\my.keystore" />
+
+    <property
+        name="keystore-alias"
+        value="ant_test" />
+
+    <!-- task -->
+
+    <target name="init" >
+
+        <echo>Initialize...</echo>
+
+        <delete dir="${bin}" />
+
+        <mkdir dir="${bin}" />
+    </target>
+
+    <target
+        name="gen-R"
+        depends="init" >
+
+        <echo>
+Generating R.java from the resources... 1.aapt package -f -m -J gen -S res -I D:/android-sdk-windows/platforms/android-16/android.jar -M AndroidManifest.xml
+        </echo>
+
+        <exec
+            executable="${tools.aapt}"
+            failonerror="true" >
+
+            <arg value="package" />
+
+            <arg value="-f" />
+
+            <arg value="-m" />
+
+            <arg value="-J" />
+
+            <arg value="${gen}" />
+
+            <arg value="-S" />
+
+            <arg value="${res}" />
+
+            <arg value="-M" />
+
+            <arg value="${manifest}" />
+
+            <arg value="-I" />
+
+            <arg value="${android-jar}" />
+        </exec>
+    </target>
+
+    <target
+        name="compile"
+        depends="gen-R" >
+
+        <echo>
+Compile...
+ javac -target 1.6 -bootclasspath D:/android-sdk-windows/platforms/android-16/android.jar -d bin gen\com\example\antdemo\*.java src\com\example\antdemo\*.java
+        </echo>
+
+        <exec
+            executable="${tools.javac}"
+            failonerror="true" >
+
+            <arg value="-target" />
+
+            <arg value="1.6" />
+
+            <arg value="-bootclasspath" />
+
+            <arg value="${android-jar}" />
+
+            <arg value="-d" />
+
+            <arg value="${bin}" />
+
+            <arg value="${java-file-gen}" />
+
+            <arg value="${java-file-src}" />
+        </exec>
+    </target>
+
+    <target
+        name="dex"
+        depends="compile" >
+
+        <echo>
+Generate dex...
+  dx 两个短横dex 两个短横output=G:\Code\Android\Workspace\AntDemo\bin\classes.dex G:\Code\Android\Workspace\AntDemo\bin
+        </echo>
+
+        <exec
+            executable="${tools.dx}"
+            failonerror="true" >
+
+            <arg value="--dex" />
+
+            <arg value="--output=${dex-name}" />
+
+            <arg value="${bin}" />
+        </exec>
+    </target>
+
+    <target
+        name="package"
+        depends="dex" >
+
+        <echo>
+   Package resource and assets...
+   4.aapt package -f -A assets -S res -I D:/android-sdk-windows/platforms/android-16/android.jar -M AndroidManifest.xml -F bin/AntDemo
+        </echo>
+
+        <exec
+            executable="${tools.aapt}"
+            failonerror="true" >
+
+            <arg value="package" />
+
+            <arg value="-f" />
+
+            <arg value="-A" />
+
+            <arg value="${assets}" />
+
+            <arg value="-S" />
+
+            <arg value="${res}" />
+
+            <arg value="-I" />
+
+            <arg value="${android-jar}" />
+
+            <arg value="-M" />
+
+            <arg value="${manifest}" />
+
+            <arg value="-F" />
+
+            <arg value="${pakcage-temp-name}" />
+        </exec>
+    </target>
+
+    <target
+        name="build-unsigned-apk"
+        depends="package" >
+
+        <echo>
+  Build unsigned apk
+  5.apkbuilder G:\Code\Android\Workspace\AntDemo\bin\AntDemo_unsigned.apk -v -u -z G:\Code\Android\Workspace\AntDemo\bin\AntDemo -f G:\Code\Android\Workspace\AntDemo\bin\classes.dex -rf G:\Code\Android\Workspace\AntDemo\src
+        </echo>
+
+        <exec
+            executable="${tools.apkbuilder}"
+            failonerror="true" >
+
+            <arg value="${unsigned-apk-path}" />
+
+            <arg value="-v" />
+
+            <arg value="-u" />
+
+            <arg value="-z" />
+
+            <arg value="${pakcage-temp-name}" />
+
+            <arg value="-f" />
+
+            <arg value="${dex-name}" />
+
+            <arg value="-rf" />
+
+            <arg value="${src}" />
+        </exec>
+    </target>
+
+    <target
+        name="sign-apk"
+        depends="build-unsigned-apk" >
+
+        <echo>
+  Sign apk
+  6.jarsigner -keystore G:\Code\Android\Workspace\AntDemo\build\my.keystore -storepass 123456 -keypass 123456 -signedjar G:\Code\Android\Workspace\AntDemo\bin\AntDemo_signed.apk G:\Code\Android\Workspace\AntDemo\bin\AntDemo_unsigned.apk ant_test
+        </echo>
+
+        <exec
+            executable="${tools.jarsigner}"
+            failonerror="true" >
+
+            <arg value="-keystore" />
+
+            <arg value="${keystore-name}" />
+
+            <arg value="-storepass" />
+
+            <arg value="123456" />
+
+            <arg value="-keypass" />
+
+            <arg value="123456" />
+
+            <arg value="-signedjar" />
+
+            <arg value="${signed-apk-path}" />
+
+            <arg value="${unsigned-apk-path}" />
+
+            <arg value="${keystore-alias}" />
+        </exec>
+    </target>
+
+    <target
+        name="release"
+        depends="sign-apk" >
+
+        <delete file="${unsigned-apk-path}" />
+
+        <echo>
+APK is released. path:${signed-apk-path}
+        </echo>
+    </target>
+
+</project>

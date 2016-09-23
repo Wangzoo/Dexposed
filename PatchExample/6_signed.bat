@@ -1,0 +1,1 @@
+jarsigner -keystore G:\Code\Android\Workspace\AntDemo\build\my.keystore -storepass 123456 -keypass 123456 -signedjar G:\Code\Android\Workspace\AntDemo\bin\AntDemo_signed.apk G:\Code\Android\Workspace\AntDemo\bin\AntDemo_unsigned.apk ant_test

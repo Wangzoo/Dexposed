@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\hasee\\Desktop\\Dexposed\\PatchExample\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_launcher.png",
+        "source": "C:\\Users\\hasee\\Desktop\\Dexposed\\PatchExample\\app\\src\\main\\res\\drawable-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\hasee\\Desktop\\DexposedDetails\\PatchExample\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_launcher.png",
+        "source": "C:\\Users\\hasee\\Desktop\\DexposedDetails\\PatchExample\\app\\src\\main\\res\\drawable-hdpi\\ic_launcher.png"
+    }
+]
