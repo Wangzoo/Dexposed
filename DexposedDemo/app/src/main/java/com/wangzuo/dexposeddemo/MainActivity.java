@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void findView() {
         textView = (TextView) findViewById(R.id.main_tv);
+
         button = (Button) findViewById(R.id.main_btn);
 
         setText();
